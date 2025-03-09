@@ -1,8 +1,8 @@
-import { Grid2 as Grid } from '@mui/material';
+import { Grid2 as Grid, Grid2Props } from '@mui/material';
 
-export default function GridContainer({ children }: { children?: React.ReactNode }) {
+export default function GridContainer({children, ...props}: Grid2Props) {
     return (
-        <Grid container spacing={2} size={12}>
+        <Grid container spacing={2} size={12} {...props}>
             {children}
         </Grid>
     );

@@ -3,11 +3,11 @@ import useLocale from '@/hooks/useLocale';
 import { SummaryTableLocale } from '@/shared/locale/summaryLabels';
 import { IAmortizationSummary, ICreditSummary, ISummaryRow } from '@/shared/models';
 import { moneyColumnDefinition } from '@/shared/utils';
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useMemo } from 'react';
 
-const getRowValues = (key: keyof ICreditSummary, {vanillaSummary: v, amortizationSummary: a}: IAmortizationSummary) => {
+const getRowValues = (key: keyof ICreditSummary, { vanillaSummary: v, amortizationSummary: a }: IAmortizationSummary) => {
   return {
     vanillaSummary: v[key],
     amortizationSummary: a[key],
@@ -23,14 +23,25 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 export default function ComparisonTable() {
-  const { amortizationHook: { amortizationSummary: summary }, creditDetails: {principal} } = useAppContext();
+  const { amortizationHook: { amortizationSummary: summary }, creditDetails: { principal } } = useAppContext();
   const tableLocale = useLocale<string>(SummaryTableLocale);
 
   const columns = useMemo<GridColDef[]>(() => {
     return [
-      { field: 'label', renderHeader: () => '', flex: 1},
-      moneyColumnDefinition<ISummaryRow>('vanillaSummary', tableLocale.vanillaSummary),
-      moneyColumnDefinition<ISummaryRow>('amortizationSummary', tableLocale.amortizationSummary),
+      { field: 'label', renderHeader: () => '', flex: 1, minWidth: 140 },
+      ...[
+        moneyColumnDefinition<ISummaryRow>('vanillaSummary', tableLocale.vanillaSummary),
+        moneyColumnDefinition<ISummaryRow>('amortizationSummary', tableLocale.amortizationSummary)
+      ].map(colDef => {
+        colDef.renderHeader = () => {
+          return (<Box flex={1}>
+            {colDef.headerName!.split('-').map((s, i) => <Typography key={i} variant="body2">{s}</Typography>)}
+          </Box>)
+
+        }
+        colDef.minWidth = 160
+        return colDef;
+      }),
       moneyColumnDefinition<ISummaryRow>('savings', tableLocale.savings),
     ];
   }, [tableLocale]);
@@ -39,13 +50,13 @@ export default function ComparisonTable() {
     { id: 'principal', label: tableLocale.principal, vanillaSummary: principal, amortizationSummary: principal, savings: 0 },
     { id: 'insurance', label: tableLocale.insurance, ...getRowValues('insurance', summary) },
     { id: 'interest', label: tableLocale.interest, ...getRowValues('interest', summary) },
-    { id: 'total', label: tableLocale.total, ...getRowValues('total', summary),  },
+    { id: 'total', label: tableLocale.total, ...getRowValues('total', summary), },
   ], [tableLocale, summary, principal]);
 
   if (!summary) return <></>;
   return (
     <Box sx={{ width: '100%' }}>
-      <StyledDataGrid rows={rows} columns={columns} hideFooter getRowClassName={(row) => row.id === 'total' ? 'total-row' : ''}/>
+      <StyledDataGrid rows={rows} columns={columns} hideFooter getRowClassName={(row) => row.id === 'total' ? 'total-row' : ''} />
     </Box>
   );
 };

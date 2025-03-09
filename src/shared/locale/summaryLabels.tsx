@@ -18,7 +18,7 @@ export const SummarySectionLocale: LocaleTranslation<string> = {
 export const SummaryTableLocale: LocaleTranslation<string> = {
     en: {
         vanillaSummary: 'Total Amount - Calculated',
-        amortizationSummary: 'Actual Amount - With Principal Contributions',
+        amortizationSummary: 'Actual Amount - W. Principal Contributions',
         paidOverTime: 'paid over',
         savings: 'Savings',
         interest: 'Total Interest',

@@ -14,6 +14,7 @@ export function moneyColumnDefinition <T extends GridValidRowModel>(key: keyof T
     field: key as string,
     headerName,
     flex: 1,
+    minWidth: 120,
     valueFormatter: (value: number) => value.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
     valueGetter: (v) => v || 0,
   };

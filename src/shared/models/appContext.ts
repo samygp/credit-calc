@@ -12,6 +12,7 @@ export interface IAppContext {
     creditDetailsHook: ICreditDetailsHook;
     paymentDetailsHook: IPaymentDetailsHook;
     amortizationHook: IAmortizationHook;
+    isMobile: boolean;
 }
 
 export default createContext<IAppContext>({} as IAppContext);
